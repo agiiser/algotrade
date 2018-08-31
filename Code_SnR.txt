@@ -1,0 +1,151 @@
+#https://www.tutorialspoint.com/execute_python_online.php
+
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+#Given l and time t, find out the future trend till delta more time due #to the past l data. 
+#First we find the Support and Resistance below. 
+# col is the input vector of time series. 
+# The output is a vector m[0,1,2,3,4,5] where m[1] and m[2] are the 
+# time points so that the support line is obtained by joining 
+# (m[1],col[m[1]]) and (m[2], col[m[2]]).
+# m[0] gives the distance of CG from the support line. 
+# Similarly m[3] gives the distance of CG from the resistance line
+# and m[4],m[5] gives the resistance line
+col=[9835.4,
+9837.65,
+9847,
+9839.3,
+9834.1,
+9825.6,
+9822.7,
+9814.35,
+9811.65,
+9806.95,
+9821.1,
+9822.4,
+9816.95,
+9810.05,
+9808.6,
+9809.2,
+9797.35,
+9786.25,
+9787.15,
+9793.9,
+9801.75,
+9803.5,
+9804.45,
+9800,
+9802.4,
+9806.3,
+9802.25,
+9807.05,
+9809,
+9807.65,
+9802.95,
+9798.6,
+9796.95,
+9797.4,
+9798.3,
+9793.95,
+9796.7,
+9799.15,
+9804.8,
+9810.1,
+9800.9,
+9794.95,
+9794.3,
+9790.35,
+9792.9,
+9785,
+9790.05,
+9790.8,
+9790.95,
+9793.65,
+9792.7,
+9796.05,
+9796.45,
+9792.35,
+9786.8,
+9782.45,
+9791.7,
+9789.3,
+9793.65,
+9797.45,
+9790,
+9794.15,
+9796.05,
+9793.1,
+9779.5,
+9777.35,
+9775,
+9764.25,
+9768.35,
+9773.8,
+9773.85,
+9765.8,
+9765.5,
+9761.05,
+9768.35,
+9767.75,
+9783.65,
+9809.05,
+9803.75,
+9805.3,
+9807.7,
+9805.7,
+9803.6,
+9814.75,
+9848.5,
+9851.65,
+9844.5,
+9841.95,
+9842.05,
+9835.25,
+9847.5,
+9839.6,
+9836.5,
+9828.6,
+9832.2,
+9838.25,
+9828.75,
+9829.05,
+9821.3,
+9816.05]
+t=80
+l=65
+if l*0.5-(l/2)<>0:
+        l=l-1
+cond1=[[0 for x in range(l)] for y in range(l)]
+cond2=[[0 for x in range(l)] for y in range(l)]
+J=[[0 for x in range(l)] for y in range(l)]
+x=list(col[t-l:t])
+g=[t-0.5*l,sum(x)/l]
+m=10**8*np.array([1,0,1,0])
+for i in range(0,l/2):
+	for j in range(l/2,l):
+            a=np.abs((x[i]-x[j])*g[0]-(i-j)*g[1]+ (x[j]*i-x[i]*j))
+            b=np.sqrt((x[i]-x[j])**2+(i-j)**2)
+            J[i][j]=a/b
+            C= (x[i]-x[j])/(i-j)
+            for k in range (0,l):
+                if x[k]< x[j]+C*(k-j):
+                    cond1[i][j]+=1
+                elif x[k]== x[j]+C*(k-j):
+                    cond2[i][j]+=1
+            if cond1[i][j]==0:
+                    m[0]=min(m[0],J[i][j])
+                    m[1:2]=[i,j]
+            elif cond1[i][j]+cond2[i][j]==l:
+                m[3]=min(m[3],J[i][j])
+                if m[3]==J[i][j]:
+                        m[4:5]=[i,j]
+                    
+m[1]+=t-l
+m[2]+=t-l
+m[4]+=t-l
+m[5]+=t-l
+
+print "m=",m
